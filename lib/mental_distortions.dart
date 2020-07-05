@@ -28,29 +28,6 @@ class MentalDistortions extends StatefulWidget {
 }
 
 class _MentalDistortionsState extends State<MentalDistortions> {
-//  final List<Distortion> _distortions;
-
-//  Future<List<Distortion>> _loadDistortions() async {
-//    String distortionsString = await rootBundle.loadString(
-//        "assets/distortions.json");
-//
-//    var parsed;
-//    try {
-//      parsed = json.decode(distortionsString);
-//    } on FormatException {
-//      print("Invalid JSON string.");
-//    } on NoSuchMethodError {
-//      print("Null string.");
-//    }
-//
-//    List<Distortion> distortions = [];
-//    for (final distortion in parsed) {
-//      distortions.add(Distortion.fromJson(distortion));
-//    }
-//
-//    return distortions;
-//  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,43 +50,48 @@ class _MentalDistortionsState extends State<MentalDistortions> {
               List<Widget> distortionCards = [];
               for (final distortion in distortions) {
                 distortionCards.add(Card(
-                    child: InkWell(
-                        child: Ink(child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                CircleAvatar(
-                                    backgroundImage: AssetImage('assets/OG_NObg_Shoulds.png'),
+                  child: InkWell(
+                      child: AnimatedContainer(
+                          duration: Duration(milliseconds: 250),
+                          decoration:
+                              BoxDecoration(color: distortionIds.contains(distortion.id) ? Colors.tealAccent : null),
+                          child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  CircleAvatar(
+                                      backgroundImage: AssetImage('assets/${distortion.icon}'),
 //                                  fit: BoxFit.cover,
-                                    radius: MediaQuery.of(context).size.width * 0.125),
-                                Padding(padding: EdgeInsets.only(right: 16.0)),
-                                Expanded(
-                                    child: MarkdownBody(
-                                  data: "### ${distortion.name}\n\n${distortion.description}",
-                                ))
-                              ],
-                            ))),
-                        onTap: () {
-                          setState(() {
-                            if (distortionIds.contains(distortion.id))
-                              distortionIds.remove(distortion.id);
-                            else
-                              distortionIds.add(distortion.id);
+                                      radius: MediaQuery.of(context).size.width * 0.125),
+                                  Padding(padding: EdgeInsets.only(right: 16.0)),
+                                  Expanded(
+                                      child: MarkdownBody(
+                                    data: "### ${distortion.name}\n\n${distortion.description}",
+                                  ))
+                                ],
+                              ))),
+                      onTap: () {
+                        setState(() {
+                          if (distortionIds.contains(distortion.id))
+                            distortionIds.remove(distortion.id);
+                          else
+                            distortionIds.add(distortion.id);
 
-                            widget.notifyParent(distortionIds);
-                          });
-                        }),
-                    color: distortionIds.contains(distortion.id) ? Colors.tealAccent : null));
+                          widget.notifyParent(distortionIds);
+                        });
+                      }),
+//                    color: distortionIds.contains(distortion.id) ? Colors.tealAccent : null));
+                ));
               }
 
               return SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: distortionCards,
-                    ),
-                  ));
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: distortionCards,
+                ),
+              ));
             }));
   }
 }

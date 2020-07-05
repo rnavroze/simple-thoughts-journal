@@ -12,13 +12,13 @@
   },
   {
     "id": 2,
-    "name": "Mental Filter",
+    "name": "Mentally Filtering",
     "description": [
       "Only paying attention to certain types of evidence.",
       "",
       "Noticing our failures but not seeing our successes."
     ],
-    "icon": "mental_filter.png"
+    "icon": "mentally_filtering.png"
   },
   {
     "id": 3,

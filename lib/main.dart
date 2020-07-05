@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mood_journal/new_entry.dart';
+import 'package:intl/intl.dart';
+
+import 'journal_entry.dart';
 
 void main() {
   runApp(MyApp());
@@ -43,18 +46,25 @@ class MoodJournalHome extends StatefulWidget {
 
 class _MoodJournalHomeState extends State<MoodJournalHome> {
   final _biggerFont = TextStyle(fontSize: 18.0);
-  final _tests = [['Test 1', '21/06/2020'],
+  final DateFormat formatter = DateFormat('MMMM d, y');
+
+  final _tests = [
+    ['Test 1', '21/06/2020'],
     ['Test 2', '23/06/2020'],
     ['Test 3', '28/06/2020'],
-    ['Test 4', '02/07/2020']];
+    ['Test 4', '02/07/2020']
+  ];
+
+  List<JournalEntry> _journalEntries = [];
+
+  void addNewJournalEntry(JournalEntry entry) {
+    setState(() {
+      _journalEntries.add(entry);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _moodList = ListTile.divideTiles(
-        context: context,
-        tiles: _tests.map((text) => _buildRow(text[0], text[1]))
-    ).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -62,16 +72,12 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
 //          icon: Icon(Icons.add),
 //        ),
       ),
-      body: ListView(children: _tests.map(
-          (text) => Card(
-            child: _buildRow(text[0], text[1])
-          )
-      ).toList()),
+      body: ListView(children: _journalEntries.map((entry) => Card(child: _buildRow(entry))).toList()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddNewEntry()),
+            MaterialPageRoute(builder: (context) => AddNewEntry(notifyParent: addNewJournalEntry)),
           );
         },
         child: Icon(Icons.add),
@@ -80,24 +86,55 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
     );
   }
 
-  Widget _buildRow(String title, String subtitle) {
+  Widget _buildRow(JournalEntry entry) {
     return ListTile(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddNewEntry(notifyParent: addNewJournalEntry, existingEntry: entry)),
+      ),
       title: Text(
-        title,
+        entry.title,
         style: _biggerFont,
       ),
-      subtitle: Text(subtitle),
+      subtitle: Text(formatter.format(entry.date)),
       trailing: IconButton(
         icon: Icon(Icons.delete),
         onPressed: () {
+          Widget yesButton = FlatButton(
+            child: Text("Delete"),
+            onPressed: () {
+              _journalEntries.remove(entry);
+              Navigator.of(context).pop();
+            },
+          );
+          Widget noButton = FlatButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          );
 
+          // set up the AlertDialog
+          AlertDialog alert = AlertDialog(
+            title: Text("Confirm Delete"),
+            content: Text("Are you sure you would like to delete this entry?"),
+            actions: [
+              noButton,
+              yesButton,
+            ],
+          );
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
         },
       ),
     );
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -170,10 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline4,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
