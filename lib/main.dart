@@ -12,9 +12,6 @@ void main() {
   runApp(MyApp());
 }
 
-
-
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -49,6 +46,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
   List<JournalEntry> _journalEntries = [];
 
   Future<Database> database;
+
   Future<void> setupDatabase() async {
     print('we are here');
     print(path.join(await getDatabasesPath(), 'mood_journal.db'));
@@ -68,38 +66,78 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
       version: 1,
-    );
+    ).then((db) async {
+      print("hum idhar hai");
+      List<Map<String, dynamic>> journalEntriesDb = await db.query('journal_entries');
+      journalEntriesDb.forEach((element) {
+        Set distortions = element['distortions'].toString().split(',').toSet();
+        Map halt = json.decode(element['halt']);
+        DateTime date = DateTime.parse(element['date'].toString());
+
+        setState(() {
+          _journalEntries.add(new JournalEntry(
+              id: element['id'],
+              title: element['title'],
+              details: element['details'],
+              level: element['level'],
+              distortions: distortions,
+              halt: halt,
+              date: date,
+              rationalThought: element['rational_thought']));
+        });
+      });
+      return null;
+    });
   }
 
-  _MoodJournalHomeState() { setupDatabase();
-  print("done");
+  _MoodJournalHomeState() {
+    setupDatabase();
   }
 
-  Future<List<Map<String,dynamic>>> getTest() async {
-    print("we are here too");
-    final Database db = await database;
-    print((await db.query('journal_entries')).toString());
-    return await db.query('journal_entries');
-  }
   Future<void> addNewJournalEntry(JournalEntry entry) async {
     final Database db = await database;
+    bool found = false;
+    if (entry.id != null) {
+      for (var i = 0; i < _journalEntries.length; i++) {
+        if (_journalEntries[i].id == entry.id) {
+          _journalEntries[i] = entry;
+          found = true;
+          break;
+        }
+      }
+    }
 
-    await db.insert(
-      'journal_entries',
-      {
-        'title': entry.title,
-        'level': entry.level,
-        'details': entry.details,
-        'distortions': entry.distortions.join(','),
-        'halt': json.encode(entry.halt),
-        'rational_thought': entry.rationalThought,
-        'date': entry.date.toIso8601String()
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    if (found) {
+      await db.update(
+          'journal_entries',
+          {
+            'title': entry.title,
+            'level': entry.level,
+            'details': entry.details,
+            'distortions': entry.distortions.join(','),
+            'halt': json.encode(entry.halt),
+            'rational_thought': entry.rationalThought,
+            'date': entry.date.toIso8601String()
+          },
+          where: 'id = ?',
+          whereArgs: [entry.id]);
+    } else {
+      await db.insert(
+        'journal_entries',
+        {
+          'title': entry.title,
+          'level': entry.level,
+          'details': entry.details,
+          'distortions': entry.distortions.join(','),
+          'halt': json.encode(entry.halt),
+          'rational_thought': entry.rationalThought,
+          'date': entry.date.toIso8601String()
+        },
+      );
+    }
 
     setState(() {
-      _journalEntries.add(entry);
+      if (!found) _journalEntries.add(entry);
     });
   }
 
@@ -108,12 +146,12 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        leading: IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            getTest();
-          },
-        ),
+//        leading: IconButton(
+//          icon: Icon(Icons.add),
+//          onPressed: () {
+//            test();
+//          },
+//        ),
       ),
       body: ListView(children: _journalEntries.map((entry) => Card(child: _buildRow(entry))).toList()),
       floatingActionButton: FloatingActionButton(

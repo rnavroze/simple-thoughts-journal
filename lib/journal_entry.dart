@@ -1,4 +1,5 @@
 class JournalEntry {
+  int id;
   String title;
   int level;
   String details;
@@ -7,5 +8,6 @@ class JournalEntry {
   String rationalThought;
   DateTime date;
 
-  JournalEntry({this.title, this.level, this.details, this.distortions, this.halt, this.rationalThought});
+  JournalEntry(
+      {this.id, this.title, this.level, this.details, this.distortions, this.halt, this.rationalThought, this.date});
 }
