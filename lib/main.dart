@@ -15,15 +15,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mood Journal',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.purple,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
@@ -47,13 +38,6 @@ class MoodJournalHome extends StatefulWidget {
 class _MoodJournalHomeState extends State<MoodJournalHome> {
   final _biggerFont = TextStyle(fontSize: 18.0);
   final DateFormat formatter = DateFormat('MMMM d, y');
-
-  final _tests = [
-    ['Test 1', '21/06/2020'],
-    ['Test 2', '23/06/2020'],
-    ['Test 3', '28/06/2020'],
-    ['Test 4', '02/07/2020']
-  ];
 
   List<JournalEntry> _journalEntries = [];
 
