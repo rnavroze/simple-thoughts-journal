@@ -1,12 +1,148 @@
 [
   {
-    "name": "All or nothing thinking",
+    "id": 1,
+    "name": "All or Nothing Thinking",
     "description": [
-      "Sometimes called 'black and white thinking'.",
+      "Placing people or situations in 'either/or' categories - there is no middle ground.",
       "",
-      "<em>If I'm not perfect, I have failed.</em>",
-      "Either I do it right or not at all.</em>"
+      "_If I'm not perfect, I have failed._",
+      "_Either I do it right or not at all._"
     ],
     "icon": "all_or_nothing.png"
+  },
+  {
+    "id": 2,
+    "name": "Mental Filter",
+    "description": [
+      "Only paying attention to certain types of evidence.",
+      "",
+      "_Noticing our failures but not seeing our successes._"
+    ],
+    "icon": "mental_filter.png"
+  },
+  {
+    "id": 3,
+    "name": "Jumping to Conclusions",
+    "description": [
+      "Mind reading: _Imagining we know what others are thinking._",
+      "",
+      "Fortune telling: _Predicting the future._"
+    ],
+    "icon": "jumping_to_conclusions.png"
+  },
+  {
+    "id": 4,
+    "name": "Emotional Reasoning",
+    "description": [
+      "Assuming that because we feel a certain way what we think must be true.",
+      "",
+      "_I feel embarrassed so I must be an idiot._"
+    ],
+    "icon": "emotional_reasoning.png"
+  },
+  {
+    "id": 5,
+    "name": "Labelling",
+    "description": [
+      "Assigning labels to oursleves or other people.",
+      "",
+      "_I'm a loser._",
+      "_I'm completely useless._",
+      "_They're such an idiot._"
+    ],
+    "icon": "labelling.png"
+  },
+  {
+    "id": 6,
+    "name": "Overgeneralizing",
+    "description": [
+      "Seeing a pattern based upon a single event, or being overly broad in the conclusions we draw.",
+      "",
+      "_Everything is always rubbish._",
+      "_Nothing good ever happens._"
+    ],
+    "icon": "overgeneralizing.png"
+  },
+  {
+    "id": 7,
+    "name": "Disqualifying the Positive",
+    "description": [
+      "Discounting the good the positive things that have happened or that we have done for some reason or another.",
+      "",
+      "_That doesn't count._"
+    ],
+    "icon": "disqualifying_the_positive.png"
+  },
+  {
+    "id": 8,
+    "name": "Magnification and Minimization",
+    "description": [
+      "Blowing things out of proportion (catastrophising), or inappropriately shrinking something to make it seem less important."
+    ],
+    "icon": "magnification.png"
+  },
+  {
+    "id": 9,
+    "name": "Shoulds",
+    "description": [
+      "Using critical words like 'should', 'must' or 'ought' can make us feel guilty, or like we have already failed.",
+      "If we apply 'shoulds' to other people, the result is often frustration."
+    ],
+    "icon": "shoulds.png"
+  },
+  {
+    "id": 10,
+    "name": "Personalization",
+    "description": [
+      "Blaming ourselves or taking responsibility for something that wasn't completely our fault. Conversely, blaming other people for something that was our fault."
+    ],
+    "icon": "personalization.png"
+  },
+  {
+    "id": 11,
+    "name": "Control Fallacies",
+    "description": [
+      "If we feel externally controlled, we see ourselves as helpless a victim of fate.",
+      "",
+      "However, the fallacy of internal control has us assuming responsibility for the pain and happiness of everyone around us."
+    ],
+    "icon": "control_fallacies.png"
+  },
+  {
+    "id": 12,
+    "name": "Fallacy of Fairness",
+    "description": [
+      "Feeling resentful because we think that we know what is fair, even if others disagree.",
+      "",
+      "People who go through life applying a measuring ruler against every situation judging its 'fairness” will often feel resentful, angry, and even hopeless because of it."
+    ],
+    "icon": "fallacy_of_fairness.png"
+  },
+  {
+    "id": 13,
+    "name": "Fallacy of Change",
+    "description": [
+      "Expecting that other people will change to suit us if we just pressure them enough.",
+      "",
+      "A person needs to change people because their hopes for success and happiness seem to depend entirely on them."
+    ],
+    "icon": "fallacy_of_change.png"
+  },
+  {
+    "id": 14,
+    "name": "Always Being Right",
+    "description": [
+      "When a person engages in this distortion, they are continually putting other people on trial to prove that their own opinions and actions are the absolute correct ones."
+    ],
+    "icon": "always_being_right.png"
+  },
+  {
+    "id": 15,
+    "name": "Heaven's Reward Fallacy",
+    "description": [
+      "The false belief that our sacrifice and self-denial will eventually pay off, as if some global force is keeping score.",
+      "A person who sacrifices and works hard but doesn’t experience the expected pay off will usually feel bitter when the reward doesn’t come."
+    ],
+    "icon": "heavens_reward_fallacy.png"
   }
 ]

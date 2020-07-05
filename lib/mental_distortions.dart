@@ -1,26 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Distortion {
+  String id;
   String name;
   String description;
   String icon;
 
-  factory Distortion.fromJson(Map<String, dynamic> json) =>
-      Distortion(
-          name: json['name'],
-          description: json['description'].join("<br>"),
-          icon: json['icon']
-      );
+  factory Distortion.fromJson(Map<String, dynamic> json) => Distortion(
+      name: json['name'],
+      description: json['description'].join("  \n"),
+      icon: json['icon']);
 
   Map<String, dynamic> toJson() =>
-      {
-        "name": name,
-        "description": description,
-        "icon": icon
-      };
+      {"name": name, "description": description, "icon": icon};
 
   Distortion({this.name, this.description, this.icon});
 }
@@ -65,8 +60,8 @@ class _MentalDistortionsState extends State<MentalDistortions> {
           title: Text('Choose Distortions'),
         ),
         body: FutureBuilder(
-            future: DefaultAssetBundle.of(context).loadString(
-                'assets/distortions.json'),
+            future: DefaultAssetBundle.of(context)
+                .loadString('assets/distortions.json'),
             builder: (context, snapshot) {
               List<Distortion> distortions = [];
               final decoded = json.decode(snapshot.data.toString());
@@ -77,10 +72,25 @@ class _MentalDistortionsState extends State<MentalDistortions> {
               List<Widget> distortionCards = [];
               for (final distortion in distortions) {
                 distortionCards.add(Card(
-                    child: ListTile(
-                      title: Text(distortion.name),
-                      subtitle: Html(data: distortion.description),
-                    )));
+                    child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Image(
+                              image: AssetImage('assets/Filtering.png'),
+                              fit: BoxFit.cover,
+                              width: 40.0,
+                              height: 40.0,
+                            ),
+                            Padding(padding: EdgeInsets.only(right: 16.0)),
+                            Expanded(
+                                child: MarkdownBody(
+                              data:
+                                  "### ${distortion.name}\n\n${distortion.description}",
+                            ))
+                          ],
+                        ))));
               }
 
               return SingleChildScrollView(
@@ -90,10 +100,7 @@ class _MentalDistortionsState extends State<MentalDistortions> {
                     child: Column(
                       children: distortionCards,
                     ),
-                  )
-              );
-            }
-        )
-    );
+                  ));
+            }));
   }
 }
