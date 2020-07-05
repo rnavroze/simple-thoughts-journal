@@ -89,7 +89,7 @@ class _MentalDistortionsState extends State<MentalDistortions> {
                   child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  children: distortionCards,
+                  children: [...distortionCards, Text('Illustrations by Sarah Grohol.')],
                 ),
               ));
             }));

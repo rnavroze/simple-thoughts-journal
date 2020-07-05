@@ -1,7 +1,6 @@
 class JournalEntry {
   String title;
   int level;
-
   String details;
   Set distortions;
   Map halt;
