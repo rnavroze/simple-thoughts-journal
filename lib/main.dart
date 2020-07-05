@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'new_entry.dart';
+import 'package:mood_journal/new_entry.dart';
 
 void main() {
   runApp(MyApp());

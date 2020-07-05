@@ -1,13 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-enum Mood { verySad, sad, neutral, happy, veryHappy }
+import 'package:mood_journal/mental_distortions.dart';
 
 class JournalEntry {
   String title;
   int level;
 
-//  Mood mood;
   String details;
   List thoughts;
   List halt;
@@ -120,7 +118,12 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                   padding: const EdgeInsets.fromLTRB(
                                       10.0, 5.0, 8.0, 5.0),
                                   child: RaisedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => MentalDistortions()),
+                                        );
+                                      },
                                       child: Text('Mental Distortions'))),
                               Text('0 selected')
                             ],
