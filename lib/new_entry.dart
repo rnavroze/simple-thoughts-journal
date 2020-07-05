@@ -11,13 +11,7 @@ class JournalEntry {
   List halt;
   String rationalThought;
 
-  JournalEntry(
-      {this.title,
-      this.level,
-      this.details,
-      this.thoughts,
-      this.halt,
-      this.rationalThought});
+  JournalEntry({this.title, this.level, this.details, this.thoughts, this.halt, this.rationalThought});
 }
 
 class AddNewEntry extends StatefulWidget {
@@ -32,6 +26,13 @@ class AddNewEntry extends StatefulWidget {
 class _AddNewEntryState extends State<AddNewEntry> {
   final _formKey = GlobalKey<FormState>();
   JournalEntry _journalEntry = new JournalEntry();
+  Set distortionIds = Set();
+
+  void updateDistortions(Set distortionIds) {
+    setState(() {
+      this.distortionIds = distortionIds;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,35 +69,20 @@ class _AddNewEntryState extends State<AddNewEntry> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               IconButton(
-                                  icon: Icon(this._journalEntry.level == 1
-                                      ? Icons.looks_one
-                                      : Icons.filter_1),
-                                  onPressed: () => setState(
-                                      () => this._journalEntry.level = 1)),
+                                  icon: Icon(this._journalEntry.level == 1 ? Icons.looks_one : Icons.filter_1),
+                                  onPressed: () => setState(() => this._journalEntry.level = 1)),
                               IconButton(
-                                  icon: Icon(this._journalEntry.level == 2
-                                      ? Icons.looks_two
-                                      : Icons.filter_2),
-                                  onPressed: () => setState(
-                                      () => this._journalEntry.level = 2)),
+                                  icon: Icon(this._journalEntry.level == 2 ? Icons.looks_two : Icons.filter_2),
+                                  onPressed: () => setState(() => this._journalEntry.level = 2)),
                               IconButton(
-                                  icon: Icon(this._journalEntry.level == 3
-                                      ? Icons.looks_3
-                                      : Icons.filter_3),
-                                  onPressed: () => setState(
-                                      () => this._journalEntry.level = 3)),
+                                  icon: Icon(this._journalEntry.level == 3 ? Icons.looks_3 : Icons.filter_3),
+                                  onPressed: () => setState(() => this._journalEntry.level = 3)),
                               IconButton(
-                                  icon: Icon(this._journalEntry.level == 4
-                                      ? Icons.looks_4
-                                      : Icons.filter_4),
-                                  onPressed: () => setState(
-                                      () => this._journalEntry.level = 4)),
+                                  icon: Icon(this._journalEntry.level == 4 ? Icons.looks_4 : Icons.filter_4),
+                                  onPressed: () => setState(() => this._journalEntry.level = 4)),
                               IconButton(
-                                  icon: Icon(this._journalEntry.level == 5
-                                      ? Icons.looks_5
-                                      : Icons.filter_5),
-                                  onPressed: () => setState(
-                                      () => this._journalEntry.level = 5)),
+                                  icon: Icon(this._journalEntry.level == 5 ? Icons.looks_5 : Icons.filter_5),
+                                  onPressed: () => setState(() => this._journalEntry.level = 5)),
                             ],
                           ),
                           CustomTextFormField(
@@ -115,26 +101,25 @@ class _AddNewEntryState extends State<AddNewEntry> {
                           Row(
                             children: <Widget>[
                               Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      10.0, 5.0, 8.0, 5.0),
+                                  padding: const EdgeInsets.fromLTRB(10.0, 5.0, 8.0, 5.0),
                                   child: RaisedButton(
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => MentalDistortions()),
+                                          MaterialPageRoute(
+                                              builder: (context) => MentalDistortions(
+                                                  notifyParent: updateDistortions, distortionIds: this.distortionIds)),
                                         );
                                       },
                                       child: Text('Mental Distortions'))),
-                              Text('0 selected')
+                              Text('${distortionIds.length.toString()} selected')
                             ],
                           ),
                           Row(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    10.0, 5.0, 8.0, 5.0),
-                                child: RaisedButton(
-                                    onPressed: () {}, child: Text('HALT')),
+                                padding: const EdgeInsets.fromLTRB(10.0, 5.0, 8.0, 5.0),
+                                child: RaisedButton(onPressed: () {}, child: Text('HALT')),
                               ),
                               Text('0 selected')
                             ],

@@ -4,26 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Distortion {
-  String id;
+  int id;
   String name;
   String description;
   String icon;
 
-  factory Distortion.fromJson(Map<String, dynamic> json) => Distortion(
-      name: json['name'],
-      description: json['description'].join("  \n"),
-      icon: json['icon']);
+  factory Distortion.fromJson(Map<String, dynamic> json) =>
+      Distortion(id: json['id'], name: json['name'], description: json['description'].join("  \n"), icon: json['icon']);
 
-  Map<String, dynamic> toJson() =>
-      {"name": name, "description": description, "icon": icon};
+  Map<String, dynamic> toJson() => {"id": id, "name": name, "description": description, "icon": icon};
 
-  Distortion({this.name, this.description, this.icon});
+  Distortion({this.id, this.name, this.description, this.icon});
 }
 
 class MentalDistortions extends StatefulWidget {
   final Function notifyParent;
+  final Set distortionIds;
 
-  MentalDistortions({Key key, @required this.notifyParent}) : super(key: key);
+  MentalDistortions({Key key, @required this.notifyParent, @required this.distortionIds}) : super(key: key);
 
   @override
   _MentalDistortionsState createState() => _MentalDistortionsState();
@@ -60,10 +58,13 @@ class _MentalDistortionsState extends State<MentalDistortions> {
           title: Text('Choose Distortions'),
         ),
         body: FutureBuilder(
-            future: DefaultAssetBundle.of(context)
-                .loadString('assets/distortions.json'),
+            future: DefaultAssetBundle.of(context).loadString('assets/distortions.json'),
             builder: (context, snapshot) {
+              if (snapshot?.data == null) return Container();
+
               List<Distortion> distortions = [];
+              Set distortionIds = widget.distortionIds;
+
               final decoded = json.decode(snapshot.data.toString());
               for (final distortion in decoded) {
                 distortions.add(Distortion.fromJson(distortion));
@@ -72,29 +73,37 @@ class _MentalDistortionsState extends State<MentalDistortions> {
               List<Widget> distortionCards = [];
               for (final distortion in distortions) {
                 distortionCards.add(Card(
-                    child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Image(
-                              image: AssetImage('assets/Filtering.png'),
-                              fit: BoxFit.cover,
-                              width: 40.0,
-                              height: 40.0,
-                            ),
-                            Padding(padding: EdgeInsets.only(right: 16.0)),
-                            Expanded(
-                                child: MarkdownBody(
-                              data:
-                                  "### ${distortion.name}\n\n${distortion.description}",
-                            ))
-                          ],
-                        ))));
+                    child: InkWell(
+                        child: Ink(child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                CircleAvatar(
+                                    backgroundImage: AssetImage('assets/OG_NObg_Shoulds.png'),
+//                                  fit: BoxFit.cover,
+                                    radius: MediaQuery.of(context).size.width * 0.125),
+                                Padding(padding: EdgeInsets.only(right: 16.0)),
+                                Expanded(
+                                    child: MarkdownBody(
+                                  data: "### ${distortion.name}\n\n${distortion.description}",
+                                ))
+                              ],
+                            ))),
+                        onTap: () {
+                          setState(() {
+                            if (distortionIds.contains(distortion.id))
+                              distortionIds.remove(distortion.id);
+                            else
+                              distortionIds.add(distortion.id);
+
+                            widget.notifyParent(distortionIds);
+                          });
+                        }),
+                    color: distortionIds.contains(distortion.id) ? Colors.tealAccent : null));
               }
 
               return SingleChildScrollView(
-                  reverse: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
