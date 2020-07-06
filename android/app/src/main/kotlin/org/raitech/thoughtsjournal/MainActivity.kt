@@ -1,4 +1,4 @@
-package org.raitech.mood_journal
+package org.raitech.thoughtsjournal
 
 import io.flutter.embedding.android.FlutterActivity
 

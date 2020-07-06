@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
@@ -22,10 +23,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       localizationsDelegates: [
         S.delegate,
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate
       ],
       supportedLocales: S.delegate.supportedLocales,
       locale: Locale('en'), // Remove this when (if) we add new languages?
-      title: 'Mood Journal',
+      title: 'Simple Thoughts Journal',
       theme: ThemeData(
         primarySwatch: Colors.purple,
         // This makes the visual density adapt to the platform that you run
@@ -33,7 +36,8 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MoodJournalHome(title: S.of(context).appName),
+      // TODO: Figure out why S.of(context).appName doesn't work here
+      home: MoodJournalHome(title: 'Simple Thoughts Journal'),
     );
   }
 }
@@ -48,8 +52,15 @@ class MoodJournalHome extends StatefulWidget {
 }
 
 class _MoodJournalHomeState extends State<MoodJournalHome> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting();     //very important
+    formatter = DateFormat('MMMM d, y');
+  }
+
   final _biggerFont = TextStyle(fontSize: 18.0);
-  final DateFormat formatter = DateFormat('MMMM d, y');
+  DateFormat formatter;
 
   List<JournalEntry> _journalEntries = [];
 

@@ -61,7 +61,10 @@ class _MentalDistortionsState extends State<MentalDistortions> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Text(S.of(context).explainDistortions),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(S.of(context).explainDistortions),
+                    ),
                     Padding(padding: EdgeInsets.only(bottom: 10.0)),
                     ...distortionCards,
                     Padding(padding: EdgeInsets.only(top: 8.0)),

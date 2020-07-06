@@ -22,7 +22,10 @@ class _HALTState extends State<HALT> {
         body: Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(children: [
-              Text(S.of(context).explainHalt),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(S.of(context).explainHalt),
+              ),
               Padding(padding: EdgeInsets.only(bottom: 10.0)),
               ...halt.keys.map((k) => CheckboxListTile(
                     // TODO: i18n support instead of a hack solution
