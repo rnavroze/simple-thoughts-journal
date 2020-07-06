@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mood_journal/generated/i18n.dart';
 import 'mental_distortions.dart';
 
 class MentalDistortions extends StatefulWidget {
@@ -17,7 +18,7 @@ class _MentalDistortionsState extends State<MentalDistortions> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Choose Distortions'),
+          title: Text(S.of(context).chooseDistortions),
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context).loadString('assets/distortions.json'),
@@ -60,9 +61,11 @@ class _MentalDistortionsState extends State<MentalDistortions> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
+                    Text(S.of(context).explainDistortions),
+                    Padding(padding: EdgeInsets.only(bottom: 10.0)),
                     ...distortionCards,
                     Padding(padding: EdgeInsets.only(top: 8.0)),
-                    Text('Illustrations by Sarah Grohol')
+                    Text(S.of(context).illustrationsBy)
                   ],
                 ),
               ));

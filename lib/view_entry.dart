@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mood_journal/generated/i18n.dart';
 import 'package:mood_journal/journal_entry.dart';
 import 'package:mood_journal/mental_distortions.dart';
 
@@ -25,7 +26,7 @@ class _ViewEntryState extends State<ViewEntry> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('View Entry'),
+          title: Text(S.of(context).viewEntry),
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context).loadString('assets/distortions.json'),
@@ -46,19 +47,21 @@ class _ViewEntryState extends State<ViewEntry> {
                     Text(widget.journalEntry.title, style: _titleFont),
                     Padding(padding: const EdgeInsets.only(bottom: 4.0)),
                     Text(widget.journalEntry.details, style: _biggerFont),
+                    Padding(padding: const EdgeInsets.only(bottom: 4.0)),
+                    Text(S.of(context).level(widget.journalEntry.level ?? S.of(context).notSelected), style: _biggerFont),
                     Padding(padding: const EdgeInsets.only(bottom: 16.0)),
-                    Text('Mental Distortions', style: _titleFont),
+                    Text(S.of(context).mentalDistortions, style: _titleFont),
                     Padding(padding: const EdgeInsets.only(bottom: 4.0)),
                     ..._getDistortionCards(distortions, widget.journalEntry, context),
                     Padding(padding: const EdgeInsets.only(bottom: 16.0)),
-                    Text('HALT', style: _titleFont),
+                    Text(S.of(context).halt, style: _titleFont),
                     Padding(padding: const EdgeInsets.only(bottom: 4.0)),
                     ..._getHaltCards(widget.journalEntry, context),
                     Padding(padding: const EdgeInsets.only(bottom: 4.0)),
                     _getHalts(widget.journalEntry).length == 0
                         ? Container()
                         : CheckboxListTile(
-                            title: Text('Addressing the HALT solved my problem.', style: _biggerFont),
+                            title: Text(S.of(context).haltSolutionView, style: _biggerFont),
                             controlAffinity: ListTileControlAffinity.leading,
                             onChanged: (value) {
                               _goToEdit();
@@ -66,10 +69,11 @@ class _ViewEntryState extends State<ViewEntry> {
                             value: widget.journalEntry.haltSolution,
                           ),
                     Padding(padding: const EdgeInsets.only(bottom: 16.0)),
-                    Text('Rational Thoughts', style: _titleFont),
+                    Text(S.of(context).rationalThought, style: _titleFont),
                     Padding(padding: const EdgeInsets.only(bottom: 4.0)),
                     Text(widget.journalEntry.rationalThought, style: _biggerFont),
                     Padding(padding: const EdgeInsets.only(bottom: 80.0)),
+                    Text(S.of(context).illustrationsBy)
                   ]),
                 ),
               );
@@ -93,7 +97,7 @@ class _ViewEntryState extends State<ViewEntry> {
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('No distortions selected'),
+                child: Text(S.of(context).noDistortionsSelected),
               ))));
     }
     entry.distortions.forEach((element) {
@@ -117,7 +121,7 @@ class _ViewEntryState extends State<ViewEntry> {
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('No HALT selected'),
+                child: Text(S.of(context).noHaltSelected),
               ))));
     } else {
       halts.forEach((k, v) {
@@ -126,6 +130,7 @@ class _ViewEntryState extends State<ViewEntry> {
                 width: double.infinity,
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
+                    // TODO: i18n support instead of this hack
                     child: Text(k.toString().substring(0, 1).toUpperCase() + k.toString().substring(1),
                         style: _biggerFont)))));
       });

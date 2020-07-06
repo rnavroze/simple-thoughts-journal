@@ -215,8 +215,8 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
 
           // set up the AlertDialog
           AlertDialog alert = AlertDialog(
-            title: Text("Confirm Delete"),
-            content: Text("Are you sure you would like to delete this entry?"),
+            title: Text(S.of(context).confirmDelete),
+            content: Text(S.of(context).confirmDeleteMessage),
             actions: [
               noButton,
               yesButton,

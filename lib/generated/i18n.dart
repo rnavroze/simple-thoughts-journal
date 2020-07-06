@@ -118,12 +118,28 @@ class S {
     return Intl.message("Cognitive distortions are simply ways that our mind convinces us of something that isn’t really true. These inaccurate thoughts are usually used to reinforce negative thinking or emotions — telling ourselves things that sound rational and accurate, but really only serve to keep us feeling bad about ourselves. By learning to correctly identify them: a person can then answer the negative thinking back: and refute it.", name: 'explainDistortions');
   }
 
-  String get explain_halt {
-    return Intl.message("You can choose whether you are feeling hungry, angry, lonely or tired below. Often times, bad moods stem from these feelings being unaddressed. Once you are done saving this journal entry, try addressing these feelings: for example: by eating something if you're feeling hungry or taking a nap if you're feeling tired. Later, come back to this journal entry and see if you are still feeling that way.", name: 'explain_halt');
+  String get explainHalt {
+    return Intl.message("You can choose whether you are feeling hungry, angry, lonely or tired below. Often times, bad moods stem from these feelings being unaddressed. Once you are done saving this journal entry, try addressing these feelings: for example: by eating something if you're feeling hungry or taking a nap if you're feeling tired. Later, come back to this journal entry and see if you are still feeling that way.", name: 'explainHalt');
   }
 
   String get chooseHalt {
     return Intl.message("Choose HALT", name: 'chooseHalt');
+  }
+
+  String get hungry {
+    return Intl.message("Hungry", name: 'hungry');
+  }
+
+  String get angry {
+    return Intl.message("Angry", name: 'angry');
+  }
+
+  String get lonely {
+    return Intl.message("Lonely", name: 'lonely');
+  }
+
+  String get tired {
+    return Intl.message("Tired", name: 'tired');
   }
 
   String get chooseDistortions {
@@ -146,8 +162,16 @@ class S {
     return Intl.message("No HALT selected.", name: 'noHaltSelected');
   }
 
-  String get level {
-    return Intl.message("Thought Level", name: 'level');
+  String level(n) {
+    return Intl.message("Thought Level: ${n}", name: 'level', args: [n]);
+  }
+
+  String get notSelected {
+    return Intl.message("Not selected", name: 'notSelected');
+  }
+
+  String get viewEntry {
+    return Intl.message("View Journal Entry", name: 'viewEntry');
   }
 
 

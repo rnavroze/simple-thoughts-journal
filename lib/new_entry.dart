@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mood_journal/generated/i18n.dart';
 import 'package:mood_journal/halt.dart';
 import 'package:mood_journal/edit_mental_distortions.dart';
 
@@ -44,16 +45,16 @@ class _AddNewEntryState extends State<AddNewEntry> {
     return (await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Warning'),
-            content: new Text('Are you sure you wish to go back without saving this entry?'),
+            title: new Text(S.of(context).warning),
+            content: new Text(S.of(context).exitEditorWarning),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
+                child: new Text(S.of(context).no),
               ),
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
+                child: new Text(S.of(context).yes),
               ),
             ],
           ),
@@ -70,7 +71,7 @@ class _AddNewEntryState extends State<AddNewEntry> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text(_journalEntry.id == null ? 'Add New Entry' : 'Edit Entry'),
+              title: Text(_journalEntry.id == null ? S.of(context).addEntryTitle : S.of(context).editEntryTitle),
             ),
             body: SingleChildScrollView(
                 reverse: true,
@@ -83,11 +84,11 @@ class _AddNewEntryState extends State<AddNewEntry> {
                           child: Column(
                             children: <Widget>[
                               CustomTextFormField(
-                                hintText: 'Title',
+                                hintText: S.of(context).title,
                                 value: _journalEntry.title,
                                 validator: (String value) {
                                   if (value.isEmpty) {
-                                    return 'Enter title';
+                                    return S.of(context).titleError;
                                   }
                                   return null;
                                 },
@@ -116,12 +117,12 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                 ],
                               ),
                               CustomTextFormField(
-                                hintText: 'Details',
+                                hintText: S.of(context).details,
                                 value: _journalEntry.details,
                                 maxLines: 3,
                                 validator: (String value) {
                                   if (value.isEmpty) {
-                                    return 'Enter details';
+                                    return S.of(context).detailsError;
                                   }
                                   return null;
                                 },
@@ -143,8 +144,8 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                                       distortionIds: _journalEntry.distortions)),
                                             );
                                           },
-                                          child: Text('Mental Distortions'))),
-                                  Text('${_journalEntry.distortions.length.toString()} selected')
+                                          child: Text(S.of(context).mentalDistortions))),
+                                  Text(S.of(context).nSelected(_journalEntry.distortions.length.toString()))
                                 ],
                               ),
                               Row(
@@ -160,16 +161,18 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                                       HALT(notifyParent: _updateHALT, halt: _journalEntry.halt)),
                                             );
                                           },
-                                          child: Text('HALT'))),
-                                  Text(
-                                      '${(Map.from(_journalEntry.halt)..removeWhere((k, v) => v == false)).length.toString()} selected')
+                                          child: Text(S.of(context).halt))),
+                                  Text(S.of(context).nSelected((Map.from(_journalEntry.halt)
+                                        ..removeWhere((k, v) => v == false))
+                                      .length
+                                      .toString()))
                                 ],
                               ),
                               Container(
                                   child: _journalEntry.id != null &&
                                           (Map.from(_journalEntry.halt)..removeWhere((k, v) => v == false)).length > 0
                                       ? CheckboxListTile(
-                                          title: Text('Did addressing your HALT solve your problem?'),
+                                          title: Text(S.of(context).haltSolutionEdit),
                                           value: _journalEntry.haltSolution ?? false,
                                           onChanged: (value) {
                                             setState(() {
@@ -180,7 +183,7 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                         )
                                       : null),
                               CustomTextFormField(
-                                hintText: 'Rational Thoughts',
+                                hintText: S.of(context).rationalThought,
                                 value: _journalEntry.rationalThought,
                                 maxLines: 3,
                                 validator: (String value) {
@@ -202,7 +205,9 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                       Navigator.pop(context);
                                     }
                                   },
-                                  child: Text(_journalEntry.id == null ? 'Add New Entry' : 'Finish Editing'))
+                                  child: Text(_journalEntry.id == null
+                                      ? S.of(context).addNewEntry
+                                      : S.of(context).finishEditing))
                             ],
                           )),
                     )))));
