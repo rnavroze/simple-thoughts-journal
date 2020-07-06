@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mood_journal/new_entry.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'journal_entry.dart';
+import 'package:mood_journal/new_entry.dart';
+import 'package:mood_journal/view_entry.dart';
+import 'package:mood_journal/journal_entry.dart';
+import 'package:mood_journal/generated/i18n.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,6 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        S.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
+      locale: Locale('en'), // Remove this when (if) we add new languages?
       title: 'Mood Journal',
       theme: ThemeData(
         primarySwatch: Colors.purple,
@@ -25,7 +33,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MoodJournalHome(title: 'Mood Journal'),
+      home: MoodJournalHome(title: S.of(context).appName),
     );
   }
 }
@@ -51,25 +59,24 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
     //        print(path.join(await getDatabasesPath(), 'mood_journal.db'));
 
     database = openDatabase(
-      // Set the path to the database.
-      path.join(await getDatabasesPath(), 'mood_journal.db'),
-      // When the database is first created, create a table to store dogs.
-      onCreate: (db, version) {
-        // Run the CREATE TABLE statement on the database.
-        return db.execute(
-          "CREATE TABLE journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, level INTEGER, details STRING, distortions STRING, halt STRING, rational_thought STRING, date STRING, halt_solution INTEGER)",
-        );
-      },
-      // Set the version. This executes the onCreate function and provides a
-      // path to perform database upgrades and downgrades.
-      version: 2,
-      onUpgrade: (db, oldVersion, newVersion) {
-        if (oldVersion == 1 && newVersion == 2) {
-          return db.execute("ALTER TABLE journal_entries ADD COLUMN halt_solution INTEGER");
-        }
-        return db;
-      }
-    ).then(getEntriesFromDatabase);
+        // Set the path to the database.
+        path.join(await getDatabasesPath(), 'mood_journal.db'),
+        // When the database is first created, create a table to store dogs.
+        onCreate: (db, version) {
+          // Run the CREATE TABLE statement on the database.
+          return db.execute(
+            "CREATE TABLE journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, level INTEGER, details STRING, distortions STRING, halt STRING, rational_thought STRING, date STRING, halt_solution INTEGER)",
+          );
+        },
+        // Set the version. This executes the onCreate function and provides a
+        // path to perform database upgrades and downgrades.
+        version: 2,
+        onUpgrade: (db, oldVersion, newVersion) {
+          if (oldVersion == 1 && newVersion == 2) {
+            return db.execute("ALTER TABLE journal_entries ADD COLUMN halt_solution INTEGER");
+          }
+          return db;
+        }).then(getEntriesFromDatabase);
   }
 
   _MoodJournalHomeState() {
@@ -153,11 +160,18 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
 //        leading: IconButton(
 //          icon: Icon(Icons.add),
 //          onPressed: () {
-//            test();
+//            Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                    builder: (context) =>
+//                        ViewEntry(journalEntry: _journalEntries[0], notifyParent: addNewJournalEntry)));
 //          },
 //        ),
       ),
-      body: ListView(children: _journalEntries.map((entry) => Card(child: _buildRow(entry))).toList()),
+      body: ListView(children: [
+        ..._journalEntries.map((entry) => Card(child: _buildRow(entry))).toList(),
+        Padding(padding: const EdgeInsets.only(bottom: 80.0)),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -175,7 +189,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
     return ListTile(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AddNewEntry(notifyParent: addNewJournalEntry, existingEntry: entry)),
+        MaterialPageRoute(builder: (context) => ViewEntry(notifyParent: addNewJournalEntry, journalEntry: entry)),
       ),
       title: Text(
         entry.title,
@@ -186,14 +200,14 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
         icon: Icon(Icons.delete),
         onPressed: () {
           Widget yesButton = FlatButton(
-            child: Text("Delete"),
+            child: Text(S.of(context).delete),
             onPressed: () {
               deleteEntryFromDatabase(entry.id);
               Navigator.of(context).pop();
             },
           );
           Widget noButton = FlatButton(
-            child: Text("Cancel"),
+            child: Text(S.of(context).cancel),
             onPressed: () {
               Navigator.of(context).pop();
             },

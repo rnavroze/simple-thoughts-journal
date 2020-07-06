@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mood_journal/halt.dart';
-import 'package:mood_journal/mental_distortions.dart';
+import 'package:mood_journal/edit_mental_distortions.dart';
 
 import 'journal_entry.dart';
 
@@ -70,7 +70,7 @@ class _AddNewEntryState extends State<AddNewEntry> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text('Add New Entry'),
+              title: Text(_journalEntry.id == null ? 'Add New Entry' : 'Edit Entry'),
             ),
             body: SingleChildScrollView(
                 reverse: true,
@@ -176,16 +176,17 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                               _journalEntry.haltSolution = value;
                                             });
                                           },
+                                          controlAffinity: ListTileControlAffinity.trailing,
                                         )
                                       : null),
                               CustomTextFormField(
-                                hintText: 'Rational Thought',
+                                hintText: 'Rational Thoughts',
                                 value: _journalEntry.rationalThought,
                                 maxLines: 3,
                                 validator: (String value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter rational thought';
-                                  }
+//                                  if (value.isEmpty) {
+//                                    return 'Enter rational thoughts';
+//                                  }
                                   return null;
                                 },
                                 onSaved: (String value) {
@@ -238,6 +239,7 @@ class CustomTextFormField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         initialValue: value,
         decoration: InputDecoration(
           hintText: hintText,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HALT extends StatefulWidget {
@@ -20,6 +21,9 @@ class _HALTState extends State<HALT> {
         body: Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(children: [
+              Text(
+                  ''),
+              Padding(padding: EdgeInsets.only(bottom: 10.0)),
               ...halt.keys.map((k) => CheckboxListTile(
                     title: Text(k.toString().substring(0, 1).toUpperCase() + k.toString().substring(1)),
                     value: halt[k],
