@@ -7,7 +7,8 @@ class JournalEntry {
   Map halt;
   String rationalThought;
   DateTime date;
+  bool haltSolution;
 
   JournalEntry(
-      {this.id, this.title, this.level, this.details, this.distortions, this.halt, this.rationalThought, this.date});
+      {this.id, this.title, this.level, this.details, this.distortions, this.halt, this.rationalThought, this.date, this.haltSolution});
 }

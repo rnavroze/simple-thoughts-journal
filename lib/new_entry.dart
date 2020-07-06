@@ -165,6 +165,19 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                       '${(Map.from(_journalEntry.halt)..removeWhere((k, v) => v == false)).length.toString()} selected')
                                 ],
                               ),
+                              Container(
+                                  child: _journalEntry.id != null &&
+                                          (Map.from(_journalEntry.halt)..removeWhere((k, v) => v == false)).length > 0
+                                      ? CheckboxListTile(
+                                          title: Text('Did addressing your HALT solve your problem?'),
+                                          value: _journalEntry.haltSolution ?? false,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _journalEntry.haltSolution = value;
+                                            });
+                                          },
+                                        )
+                                      : null),
                               CustomTextFormField(
                                 hintText: 'Rational Thought',
                                 value: _journalEntry.rationalThought,
@@ -183,7 +196,7 @@ class _AddNewEntryState extends State<AddNewEntry> {
                                   onPressed: () {
                                     if (_formKey.currentState.validate()) {
                                       _formKey.currentState.save();
-                                      _journalEntry.date = DateTime.now();
+                                      if (_journalEntry.date == null) _journalEntry.date = DateTime.now();
                                       widget.notifyParent(_journalEntry);
                                       Navigator.pop(context);
                                     }

@@ -57,12 +57,18 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
       onCreate: (db, version) {
         // Run the CREATE TABLE statement on the database.
         return db.execute(
-          "CREATE TABLE journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, level INTEGER, details STRING, distortions STRING, halt STRING, rational_thought STRING, date STRING)",
+          "CREATE TABLE journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, level INTEGER, details STRING, distortions STRING, halt STRING, rational_thought STRING, date STRING, halt_solution INTEGER)",
         );
       },
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
-      version: 1,
+      version: 2,
+      onUpgrade: (db, oldVersion, newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+          return db.execute("ALTER TABLE journal_entries ADD COLUMN halt_solution INTEGER");
+        }
+        return db;
+      }
     ).then(getEntriesFromDatabase);
   }
 
@@ -72,7 +78,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
 
   Future<Database> getEntriesFromDatabase(Database db) async {
     _journalEntries = [];
-    List<Map<String, dynamic>> journalEntriesDb = await db.query('journal_entries');
+    List<Map<String, dynamic>> journalEntriesDb = await db.query('journal_entries', orderBy: 'date DESC');
 
     journalEntriesDb.forEach((element) {
       Set distortions = Set.from(json.decode(element['distortions']));
@@ -86,6 +92,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
           level: element['level'],
           distortions: distortions,
           halt: halt,
+          haltSolution: element['halt_solution'] == 1,
           date: date,
           rationalThought: element['rational_thought']));
     });
@@ -113,6 +120,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
             'details': entry.details,
             'distortions': json.encode(entry.distortions.toList()),
             'halt': json.encode(entry.halt),
+            'halt_solution': entry.haltSolution ? 1 : 0,
             'rational_thought': entry.rationalThought,
             'date': entry.date.toIso8601String()
           },
@@ -127,6 +135,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
           'details': entry.details,
           'distortions': json.encode(entry.distortions.toList()),
           'halt': json.encode(entry.halt),
+          'halt_solution': entry.haltSolution == null ? 0 : entry.haltSolution ? 1 : 0,
           'rational_thought': entry.rationalThought,
           'date': entry.date.toIso8601String()
         },
