@@ -48,13 +48,10 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
   Future<Database> database;
 
   Future<void> setupDatabase() async {
-    print('we are here');
-    print(path.join(await getDatabasesPath(), 'mood_journal.db'));
+    //        print(path.join(await getDatabasesPath(), 'mood_journal.db'));
 
     database = openDatabase(
-      // Set the path to the database. Note: Using the `join` function from the
-      // `path` package is best practice to ensure the path is correctly
-      // constructed for each platform.
+      // Set the path to the database.
       path.join(await getDatabasesPath(), 'mood_journal.db'),
       // When the database is first created, create a table to store dogs.
       onCreate: (db, version) {
@@ -66,55 +63,55 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
       version: 1,
-    ).then((db) async {
-      print("hum idhar hai");
-      List<Map<String, dynamic>> journalEntriesDb = await db.query('journal_entries');
-      journalEntriesDb.forEach((element) {
-        Set distortions = element['distortions'].toString().split(',').toSet();
-        Map halt = json.decode(element['halt']);
-        DateTime date = DateTime.parse(element['date'].toString());
-
-        setState(() {
-          _journalEntries.add(new JournalEntry(
-              id: element['id'],
-              title: element['title'],
-              details: element['details'],
-              level: element['level'],
-              distortions: distortions,
-              halt: halt,
-              date: date,
-              rationalThought: element['rational_thought']));
-        });
-      });
-      return null;
-    });
+    ).then(getEntriesFromDatabase);
   }
 
   _MoodJournalHomeState() {
     setupDatabase();
   }
 
+  Future<Database> getEntriesFromDatabase(Database db) async {
+    _journalEntries = [];
+    List<Map<String, dynamic>> journalEntriesDb = await db.query('journal_entries');
+
+    journalEntriesDb.forEach((element) {
+      Set distortions = Set.from(json.decode(element['distortions']));
+      Map halt = json.decode(element['halt']);
+      DateTime date = DateTime.parse(element['date'].toString());
+
+      _journalEntries.add(new JournalEntry(
+          id: element['id'],
+          title: element['title'],
+          details: element['details'],
+          level: element['level'],
+          distortions: distortions,
+          halt: halt,
+          date: date,
+          rationalThought: element['rational_thought']));
+    });
+
+    setState(() {});
+    return db;
+  }
+
+  void deleteEntryFromDatabase(int entryId) async {
+    final Database db = await database;
+    await db.delete('journal_entries', where: 'id = ?', whereArgs: [entryId]);
+    getEntriesFromDatabase(db);
+  }
+
   Future<void> addNewJournalEntry(JournalEntry entry) async {
     final Database db = await database;
-    bool found = false;
-    if (entry.id != null) {
-      for (var i = 0; i < _journalEntries.length; i++) {
-        if (_journalEntries[i].id == entry.id) {
-          _journalEntries[i] = entry;
-          found = true;
-          break;
-        }
-      }
-    }
+    bool exists = entry.id != null && _journalEntries.indexWhere((element) => element.id == entry.id) > -1;
 
-    if (found) {
+    if (exists) {
       await db.update(
           'journal_entries',
           {
             'title': entry.title,
             'level': entry.level,
             'details': entry.details,
-            'distortions': entry.distortions.join(','),
+            'distortions': json.encode(entry.distortions.toList()),
             'halt': json.encode(entry.halt),
             'rational_thought': entry.rationalThought,
             'date': entry.date.toIso8601String()
@@ -128,7 +125,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
           'title': entry.title,
           'level': entry.level,
           'details': entry.details,
-          'distortions': entry.distortions.join(','),
+          'distortions': json.encode(entry.distortions.toList()),
           'halt': json.encode(entry.halt),
           'rational_thought': entry.rationalThought,
           'date': entry.date.toIso8601String()
@@ -136,9 +133,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
       );
     }
 
-    setState(() {
-      if (!found) _journalEntries.add(entry);
-    });
+    getEntriesFromDatabase(db);
   }
 
   @override
@@ -184,7 +179,7 @@ class _MoodJournalHomeState extends State<MoodJournalHome> {
           Widget yesButton = FlatButton(
             child: Text("Delete"),
             onPressed: () {
-              _journalEntries.remove(entry);
+              deleteEntryFromDatabase(entry.id);
               Navigator.of(context).pop();
             },
           );
